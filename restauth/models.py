@@ -23,7 +23,6 @@ class UserManager(BaseUserManager):
             email,
             password=password,
         )
-        user.is_active = True
         user.is_superuser = True
         user.save(using=self._db)
         return user
@@ -37,7 +36,7 @@ class User(AbstractBaseUser):
         unique=True,
     )
     is_confirmed = models.BooleanField(default=False)
-    is_active = models.BooleanField(default=False)
+    is_active = models.BooleanField(default=True)
     is_superuser = models.BooleanField(default=False)
 
     objects = UserManager()
@@ -61,3 +60,8 @@ class User(AbstractBaseUser):
 
         payload = jwt_payload_handler(self)
         return jwt_encode_handler(payload)
+
+
+class UserProfile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
+    first_name = models.CharField(max_length=255)

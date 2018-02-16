@@ -48,7 +48,7 @@ class UserAdmin(BaseUserAdmin):
     list_display = ('__str__', 'created')
     list_filter = ('is_superuser',)
     fieldsets = (
-        (None, {'fields': ('email', 'password')}),
+        (None, {'fields': ('email', 'password', 'is_active')}),
         ('Permissions', {'fields': ('is_superuser',)}),
     )
     add_fieldsets = (
