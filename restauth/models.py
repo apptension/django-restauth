@@ -1,3 +1,4 @@
+import hashid_field
 from django.db import models
 from django.contrib.auth.models import (
     BaseUserManager, AbstractBaseUser
@@ -29,6 +30,7 @@ class UserManager(BaseUserManager):
 
 
 class User(AbstractBaseUser):
+    id = hashid_field.HashidAutoField(primary_key=True)
     created = models.DateTimeField(editable=False, auto_now_add=True)
     email = models.EmailField(
         verbose_name='email address',

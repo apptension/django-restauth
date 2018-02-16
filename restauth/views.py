@@ -13,3 +13,8 @@ class UserProfileView(generics.RetrieveAPIView):
 
     def get_object(self):
         return self.request.user.profile
+
+
+class UserAccountConfirmationView(generics.CreateAPIView):
+    permission_classes = (permissions.AllowAny,)
+    serializer_class = serializers.UserAccountConfirmationSerializer

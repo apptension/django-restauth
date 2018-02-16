@@ -7,8 +7,9 @@ from . import views
 
 user_patterns = [
     path('signup', views.SignUpView.as_view(), name='signup'),
-    path('token', obtain_jwt_token),
-    path('me', views.UserProfileView.as_view(), name='profile')
+    path('token', obtain_jwt_token, name='jwt_token'),
+    path('me', views.UserProfileView.as_view(), name='profile'),
+    path('confirm', views.UserAccountConfirmationView.as_view(), name='confirmation'),
 ]
 
 

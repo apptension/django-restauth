@@ -127,3 +127,9 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.BasicAuthentication',
     ),
 }
+
+JWT_AUTH = {
+    'JWT_ENCODE_HANDLER': 'restauth.jwt.encode_handler',
+}
+
+HASHID_FIELD_SALT = '9q#3t$5gs9ob682b@(6^fdv2kg*0ztr(3doa((w&kyq!d8rbt^'
