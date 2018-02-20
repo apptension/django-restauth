@@ -9,4 +9,5 @@
 - ~~User profile endpoint~~
 - ~~Hashid for User pk~~
 - Password reset
+- Add docker compose
 - Add Swagger for API documentation
