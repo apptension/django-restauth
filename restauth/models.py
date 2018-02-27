@@ -1,8 +1,7 @@
 import hashid_field
 from django.db import models
-from django.contrib.auth.models import (
-    BaseUserManager, AbstractBaseUser
-)
+from django.contrib.auth.models import BaseUserManager
+from django.contrib.auth.models import AbstractBaseUser
 from rest_framework_jwt.settings import api_settings
 
 

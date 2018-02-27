@@ -1,0 +1,4 @@
+-r requirements.txt
+pytest-factoryboy
+pytest
+factory_boy

@@ -45,7 +45,7 @@ class UserAdmin(BaseUserAdmin):
     form = UserChangeForm
     add_form = UserCreationForm
 
-    list_display = ('__str__', 'created')
+    list_display = ('__str__', 'created', 'last_login')
     list_filter = ('is_superuser',)
     fieldsets = (
         (None, {'fields': ('email', 'password', 'is_active')}),
