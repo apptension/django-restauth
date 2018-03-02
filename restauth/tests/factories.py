@@ -9,4 +9,12 @@ class UserFactory(factory.DjangoModelFactory):
 
     email = factory.Faker('email')
     is_superuser = False
-    password = factory.PostGenerationMethodCall('set_password', 'mysecret')
+    password = factory.PostGenerationMethodCall('set_password', 'secret')
+
+
+class UserProfileFactory(factory.DjangoModelFactory):
+    class Meta:
+        model = models.UserProfile
+
+    user = factory.SubFactory(UserFactory)
+    first_name = factory.Faker('name', locale='pl')

@@ -11,3 +11,4 @@ def api_client():
 
 
 pytest_factoryboy.register(factories.UserFactory)
+pytest_factoryboy.register(factories.UserProfileFactory)

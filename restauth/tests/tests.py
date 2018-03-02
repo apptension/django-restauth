@@ -6,8 +6,21 @@ from rest_framework import status
 from . import factories
 from .. import tokens
 
+pytestmark = pytest.mark.django_db
 
-@pytest.mark.django_db
+
+class TestUserProfile:
+    def test_user_profile_only_when_authenticated(self, api_client):
+        response = api_client.get(reverse('profile'))
+        assert response.status_code == status.HTTP_401_UNAUTHORIZED
+
+    def test_current_user_can_fetch_profile(self, api_client, user_profile):
+        api_client.force_authenticate(user_profile.user)
+        response = api_client.get(reverse('profile'))
+        assert response.status_code == status.HTTP_200_OK, response.data
+        assert response.data['first_name'] == user_profile.first_name
+
+
 class TestResetPassword:
     def test_no_email(self, api_client):
         response = api_client.post(reverse('password_reset'), {}, )
@@ -82,7 +95,6 @@ class TestResetPassword:
         assert u.check_password(new_password)
 
 
-@pytest.mark.django_db
 class TestChangePassword:
     def test_correct_password(self, api_client, user):
         api_client.force_authenticate(user)
