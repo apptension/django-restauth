@@ -4,6 +4,7 @@ from hashid_field import rest
 from rest_framework import exceptions
 from rest_framework import serializers
 from rest_framework import validators
+from django.utils.translation import gettext as _
 
 from . import models
 from . import tokens
@@ -70,7 +71,7 @@ class UserAccountConfirmationSerializer(serializers.Serializer):
         user = attrs['user']
 
         if not tokens.account_activation_token.check_token(user, token):
-            raise exceptions.ValidationError('Malformed token')
+            raise exceptions.ValidationError(_('Malformed user account confirmation token'))
 
         return attrs
 
@@ -89,8 +90,8 @@ class UserAccountChangePasswordSerializer(serializers.Serializer):
         queryset=models.User.objects.all(),
         pk_field=rest.HashidSerializerCharField(),
         write_only=True)
-    old_password = serializers.CharField(write_only=True, help_text='Old password')
-    new_password = serializers.CharField(write_only=True, help_text='New password')
+    old_password = serializers.CharField(write_only=True, help_text=_('Old password'))
+    new_password = serializers.CharField(write_only=True, help_text=_('New password'))
 
     jwt_token = serializers.CharField(read_only=True)
 
@@ -103,7 +104,7 @@ class UserAccountChangePasswordSerializer(serializers.Serializer):
 
         user = attrs['user']
         if not user.check_password(old_password):
-            raise exceptions.ValidationError({'old_password': 'Wrong old password'})
+            raise exceptions.ValidationError({'old_password': _('Wrong old password')})
 
         return attrs
 
@@ -120,13 +121,13 @@ class UserAccountChangePasswordSerializer(serializers.Serializer):
 
 
 class PasswordResetSerializer(serializers.Serializer):
-    email = serializers.EmailField(write_only=True, help_text='User e-mail')
+    email = serializers.EmailField(write_only=True, help_text=_('User e-mail'))
 
     def create(self, validated_data):
         try:
             user = dj_auth.get_user_model().objects.get(email=validated_data['email'])
         except dj_auth.get_user_model().DoesNotExist:
-            raise exceptions.NotFound('User not found')
+            raise exceptions.NotFound(_('User not found'))
 
         utils.user_notification_impl(
             'password_reset',
@@ -146,9 +147,9 @@ class PasswordResetConfirmationSerializer(serializers.Serializer):
         write_only=True
     )
 
-    new_password = serializers.CharField(write_only=True, help_text='New password')
-    token = serializers.CharField(write_only=True, help_text='Token')
-    jwt_token = serializers.CharField(read_only=True, help_text='JWT token')
+    new_password = serializers.CharField(write_only=True, help_text=_('New password'))
+    token = serializers.CharField(write_only=True, help_text=_('Token'))
+    jwt_token = serializers.CharField(read_only=True, help_text=_('JWT token'))
 
     def validate_new_password(self, new_password):
         password_validation.validate_password(new_password)
@@ -159,7 +160,7 @@ class PasswordResetConfirmationSerializer(serializers.Serializer):
         user = attrs['user']
 
         if not tokens.password_reset_token.check_token(user, token):
-            raise exceptions.ValidationError('Malformed token')
+            raise exceptions.ValidationError(_('Malformed password reset token'))
 
         return attrs
 
