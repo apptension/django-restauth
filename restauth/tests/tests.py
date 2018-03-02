@@ -43,7 +43,7 @@ class TestResetPassword:
                                     'new_password': new_password},
                                    )
         assert response.status_code == status.HTTP_400_BAD_REQUEST, response.data
-        assert response.data['non_field_errors'][0] == 'Malformed token', response.data
+        assert response.data['non_field_errors'][0] == 'Malformed password reset token', response.data
 
     def test_wrong_password(self, api_client, user):
         new_password = 'r'

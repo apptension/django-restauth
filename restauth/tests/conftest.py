@@ -1,6 +1,6 @@
 import pytest
-from rest_framework.test import APIClient
 import pytest_factoryboy
+from rest_framework.test import APIClient
 
 from . import factories
 
@@ -8,5 +8,6 @@ from . import factories
 @pytest.fixture
 def api_client():
     return APIClient()
+
 
 pytest_factoryboy.register(factories.UserFactory)

@@ -1,5 +1,5 @@
 from django.apps import AppConfig
 
 
-class RestuserConfig(AppConfig):
-    name = 'restuser'
+class RestauthConfig(AppConfig):
+    name = 'restauth'

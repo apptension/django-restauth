@@ -1,5 +1,9 @@
 # REST User Boilerplate :sparkles:
 
+[![Build Status](https://travis-ci.org/apptension/django-restauth.svg?branch=master)](https://travis-ci.org/apptension/django-restauth)
+
+## Usage
+
 * Modify your settings
 
 ```
