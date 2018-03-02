@@ -7,6 +7,7 @@ from rest_framework import validators
 
 from . import models
 from . import tokens
+from . import utils
 
 
 class UserProfileSerializer(serializers.ModelSerializer):
@@ -45,8 +46,14 @@ class UserSignupSerializer(serializers.ModelSerializer):
             user=user,
             **validated_data.pop('profile'),
         )
+
         activation_token = tokens.account_activation_token.make_token(user)
-        print(f'Activation token {activation_token} {user.pk}')
+        utils.user_notification_impl(
+            'account_activation',
+            user=user,
+            token=activation_token,
+        )
+
         return user
 
 
@@ -121,17 +128,15 @@ class PasswordResetSerializer(serializers.Serializer):
         except dj_auth.get_user_model().DoesNotExist:
             raise exceptions.NotFound('User not found')
 
-        password_reset_token = tokens.password_reset_token.make_token(user)
-        print(f'Password reset token: {password_reset_token}')
+        utils.user_notification_impl(
+            'password_reset',
+            token=tokens.password_reset_token.make_token(user),
+        )
 
         return user
 
     def update(self, instance, validated_data):
         pass
-
-    def send_email(self, user):
-        # password_reset_token = tokens.password_reset_token.make_token(user)
-        raise NotImplementedError("Method to send e-mails not implemented")
 
 
 class PasswordResetConfirmationSerializer(serializers.Serializer):

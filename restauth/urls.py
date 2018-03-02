@@ -23,6 +23,7 @@ password_reset_patterns = [
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
+
     path('user/', include(user_patterns)),
     path('password-reset/', include(password_reset_patterns))
 ]

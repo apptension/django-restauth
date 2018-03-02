@@ -136,3 +136,5 @@ JWT_AUTH = {
 }
 
 HASHID_FIELD_SALT = '9q#3t$5gs9ob682b@(6^fdv2kg*0ztr(3doa((w&kyq!d8rbt^'
+
+USER_NOTIFICATION_IMPL = 'restauth.notifications.stdout'

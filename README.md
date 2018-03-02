@@ -42,12 +42,11 @@ HASHID_FIELD_SALT = ''
 - Login endpoint to return JWT token
 - User account activation endpoint
 - User profile endpoint
-- HashID for User PK
-- Password reset, change endpoints
+- HashID for User primary key
+- Password reset & change endpoints
 - Add Swagger for API documentation
+- Ability to set user notification implementation
 
 ## TODO
 - Add lean docker-compose w/ Postgres
-- Add Setting that will point to implementation responsible to deliver all kind of messages (Tokens)
-- Use email sending interface in code where needed
-- Add a way to communicate settings, urls and etc to a higher order project
+- Add a way to communicate settings, urls, etc to a higher order project
