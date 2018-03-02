@@ -1,4 +1,4 @@
-# REST User Boilerplate :sparkles:
+# 🍔 django-restauth
 
 [![Build Status](https://travis-ci.org/apptension/django-restauth.svg?branch=master)](https://travis-ci.org/apptension/django-restauth)
 
@@ -6,7 +6,7 @@
 
 * Modify your settings
 
-```
+```python
 LANGUAGE_CODE = 'error_codes'
 
 # ..
@@ -42,15 +42,14 @@ HASHID_FIELD_SALT = ''
 * Modify `urls.py`
 
 ## Features
-- Register user with profile in single API call
-- Login endpoint to return JWT token
-- User account activation endpoint
-- User profile endpoint
-- HashID for User primary key
-- Password reset & change endpoints
-- Add Swagger for API documentation
-- Ability to set user notification implementation
 
-## TODO
-- Add lean docker-compose w/ Postgres
-- Add a way to communicate settings, urls, etc to a higher order project
+- [x] Register user with profile in single API call
+- [x] Login endpoint to return JWT token
+- [x] User account activation endpoint
+- [x] User profile endpoint
+- [x] HashID for User primary key
+- [x] Password reset & change endpoints
+- [x] Add Swagger for API documentation
+- [x] Ability to set user notification implementation
+- [ ] Add lean docker-compose w/ Postgres
+- [ ] Add a way to communicate settings, urls, etc to a higher order project
