@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.conf.urls import url
 from django.contrib import admin
 from django.urls import path
@@ -22,7 +23,7 @@ password_reset_patterns = [
 ]
 
 urlpatterns = [
-    url(r'^admin/', admin.site.urls),
+    url(r'^{settings.ADMIN_URL}/'.format(settings=settings), admin.site.urls),
 
     path('user/', include(user_patterns)),
     path('password-reset/', include(password_reset_patterns))
