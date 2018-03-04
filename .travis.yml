@@ -1,7 +1,16 @@
+sudo: required
+services:
+  - docker
 language: python
 python:
   - "3.6"
-install:
-  - pip install -r requirements_test.txt
+before_install:
+  - docker-compose -v
+  - docker -v
 script:
-  - pytest
+  - docker-compose run --rm backend scripts/run_test.sh
+  - docker-compose run --rm backend python manage.py makemigrations --dry-run --check || { echo "ERROR Migration listed above have not been created"; exit 1; }
+notifications:
+  email:
+    on_success: change
+    on_failure: always

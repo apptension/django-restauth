@@ -96,11 +96,12 @@ class TestResetPassword:
 
 
 class TestChangePassword:
-    def test_correct_password(self, api_client, user):
+    def test_correct_password(self, api_client, user_factory):
+        user = user_factory(password='secret')
         api_client.force_authenticate(user)
         response = api_client.post(reverse('change_password'), {
             'user': user.pk,
-            'old_password': factories.UserFactory.password,
+            'old_password': user._password,
             'new_password': 'bvbb1234'})
     
         u = dj_auth.get_user_model().objects.get(pk=user.pk)
