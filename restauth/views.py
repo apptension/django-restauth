@@ -10,7 +10,7 @@ class SignUpView(generics.CreateAPIView):
     serializer_class = serializers.UserSignupSerializer
 
 
-class UserProfileView(generics.RetrieveAPIView):
+class UserProfileView(generics.RetrieveUpdateAPIView):
     serializer_class = serializers.UserProfileSerializer
 
     def get_object(self):

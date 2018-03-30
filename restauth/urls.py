@@ -18,8 +18,6 @@ user_patterns = [
 password_reset_patterns = [
     path('', views.PasswordResetView.as_view(), name='password_reset'),
     path(r'confirm/', views.PasswordResetConfirmationView.as_view(), name='password_reset_confirmation'),
-    path(r'confirm/<user_pk>/<token>/', views.PasswordResetConfirmationView.as_view(),
-         name='password_reset_confirmation_url')
 ]
 
 urlpatterns = [

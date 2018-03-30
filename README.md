@@ -53,3 +53,7 @@ HASHID_FIELD_SALT = ''
 - [x] Ability to set user notification implementation
 - [ ] Add lean docker-compose w/ Postgres
 - [ ] Add a way to communicate settings, urls, etc to a higher order project
+- [x] Remove user away from change password endpoint
+- [x] Change user to email on auth confirm endpoint
+- [x] Add endpoint to change profile
+- [x] Review password reset confirm endpoint

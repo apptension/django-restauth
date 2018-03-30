@@ -22,7 +22,7 @@ class UserSignupSerializer(serializers.ModelSerializer):
     email = serializers.EmailField(
         validators=[validators.UniqueValidator(queryset=dj_auth.get_user_model().objects.all())],
     )
-    profile = UserProfileSerializer()
+    profile = UserProfileSerializer(required=False)
 
     class Meta:
         model = dj_auth.get_user_model()
@@ -86,10 +86,7 @@ class UserAccountConfirmationSerializer(serializers.Serializer):
 
 
 class UserAccountChangePasswordSerializer(serializers.Serializer):
-    user = serializers.PrimaryKeyRelatedField(
-        queryset=models.User.objects.all(),
-        pk_field=rest.HashidSerializerCharField(),
-        write_only=True)
+    user = serializers.HiddenField(default=serializers.CurrentUserDefault())
     old_password = serializers.CharField(write_only=True, help_text=_('Old password'))
     new_password = serializers.CharField(write_only=True, help_text=_('New password'))
 
