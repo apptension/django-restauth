@@ -15,6 +15,7 @@ factory_boy = "==2.10.0"
 pytest = "==3.4.1"
 pytest-factoryboy = "==2.0.1"
 pytest-django = "==3.1.2"
+django-rest-swagger = "*"
 
 [requires]
 python_version = "3.6"
