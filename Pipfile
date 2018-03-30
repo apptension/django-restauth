@@ -1,0 +1,19 @@
+[[source]]
+url = "https://pypi.python.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+Django = "==2.0.2"
+djangorestframework = "==3.7.7"
+djangorestframework-jwt = "==1.11.0"
+django-hashid-field = "==2.1.0"
+
+[dev-packages]
+factory_boy = "==2.10.0"
+pytest = "==3.4.1"
+pytest-factoryboy = "==2.0.1"
+pytest-django = "==3.1.2"
+
+[requires]
+python_version = "3.6"
