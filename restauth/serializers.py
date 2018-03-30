@@ -45,7 +45,7 @@ class UserSignupSerializer(serializers.ModelSerializer):
         )
         models.UserProfile.objects.create(
             user=user,
-            **validated_data.pop('profile'),
+            **validated_data.pop('profile', {}),
         )
 
         activation_token = tokens.account_activation_token.make_token(user)
