@@ -77,22 +77,6 @@ class TestResetPassword:
                                    )
         assert response.status_code == status.HTTP_400_BAD_REQUEST, response.data
         assert response.data['user'][0] == 'Invalid int or Hashid string', response.data
-    
-    def test_token_correct_url(self, api_client, user):
-        # TODO: perhaps there is a way to run again the same tests with new url.
-        password_token = tokens.password_reset_token.make_token(user)
-        new_password = 'random1234'
-    
-        response = api_client.post(reverse('password_reset_confirmation_url', kwargs={
-            'user_pk': user.pk, 'token': password_token}),
-                                   {'user': str(user.pk), 'token': password_token,
-                                    'new_password': new_password},
-                                   )
-        assert response.status_code == status.HTTP_201_CREATED, response.data
-    
-        u = dj_auth.get_user_model().objects.get(pk=user.pk)
-        assert response.data['jwt_token'] == u.jwt_token, response.data
-        assert u.check_password(new_password)
 
 
 class TestChangePassword:
