@@ -8,6 +8,7 @@ Django = "==2.0.2"
 djangorestframework = "==3.7.7"
 djangorestframework-jwt = "==1.11.0"
 django-hashid-field = "==2.1.0"
+dj-database-url = "*"
 
 [dev-packages]
 factory_boy = "==2.10.0"
