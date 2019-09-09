@@ -1,0 +1,26 @@
+version: '3'
+
+services:
+  db:
+    image: postgres:9.6
+    ports:
+      - "5432:5432"
+    volumes:
+      - restauth_backend:/var/lib/postgresql/data
+
+  dev:
+    build: .
+    image: restauth_backend
+    command: "./wait-for-it.sh db:5432 -- python manage.py runserver 0:8000"
+    volumes:
+      - .:/code
+    ports:
+      - "8000:8000"
+    depends_on:
+      - "db"
+    restart: on-failure
+    env_file: .env
+
+volumes:
+  restauth_backend:
+    external: true

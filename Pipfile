@@ -4,10 +4,10 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-Django = "==2.0.2"
-djangorestframework = "==3.7.7"
-djangorestframework-jwt = "==1.11.0"
-django-hashid-field = "==2.1.0"
+Django = "~=2.2"
+djangorestframework = "~=3.10"
+djangorestframework-jwt = "~=1.11"
+django-hashid-field = "~=2.1"
 dj-database-url = "*"
 
 [dev-packages]
@@ -18,4 +18,4 @@ pytest-django = "==3.1.2"
 django-rest-swagger = "*"
 
 [requires]
-python_version = "3.6"
+python_version = "3.7"
