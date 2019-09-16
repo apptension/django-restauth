@@ -1,0 +1,35 @@
+version: '3'
+
+services:
+  db:
+    image: postgres:9.6.8
+    ports:
+    - "5432:5432"
+    env_file: test.env
+
+  localstack:
+    image: localstack/localstack:0.10.2
+    ports:
+      - "4567-4584:4567-4584"
+    environment:
+      - SERVICES=secretsmanager
+      - DEBUG=${DEBUG- }
+      - DATA_DIR=${DATA_DIR- }
+      - PORT_WEB_UI=${PORT_WEB_UI- }
+      - LAMBDA_EXECUTOR=${LAMBDA_EXECUTOR- }
+      - LAMBDA_REMOTE_DOCKER=false
+      - KINESIS_ERROR_PROBABILITY=${KINESIS_ERROR_PROBABILITY- }
+      - DOCKER_HOST=unix:///var/run/docker.sock
+      - AWS_EXECUTION_ENV=True
+      - AWS_DEFAULT_REGION=us-east-1
+      - AWS_ACCESS_KEY_ID=foo
+      - AWS_SECRET_ACCESS_KEY=bar
+
+  backend:
+    image: ${BACKEND_IMAGE}
+    depends_on:
+      - db
+      - localstack
+    restart: on-failure
+    env_file: test.env
+    command: ./scripts/dev/run_tests.sh

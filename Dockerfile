@@ -9,12 +9,14 @@ RUN apk update \
     && apk add postgresql-dev \
     && apk add build-base linux-headers pcre-dev
 
+RUN pip install awscli
+
 EXPOSE 3031
-WORKDIR /code
-COPY Pipfile Pipfile.lock ./
+WORKDIR /app
+COPY Pipfile Pipfile.lock /app/
 RUN pip install --upgrade pip
 RUN pip install pipenv
 RUN pipenv install --system --dev
-COPY . .
+COPY . /app
 
-CMD ["./run-backend.sh"]
+CMD ["/app/scripts/run-backend.sh"]

@@ -1,9 +1,19 @@
 import os
+import json
 import dj_database_url
+import boto3
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+secrets_manager = boto3.client(
+    'secretsmanager', endpoint_url=os.environ.get('SECRET_MANAGER_ENDPOINT_URL', None))
+
+db_secret_arn = os.environ['DB_SECRET_ARN']
+
+db_secret_value = secrets_manager.get_secret_value(SecretId=db_secret_arn)
+# contains host, username, password and port
+db_connection_config = json.loads(db_secret_value.get('SecretString'))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
@@ -64,7 +74,17 @@ WSGI_APPLICATION = 'restauth.wsgi.application'
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
 
 DATABASES = {
-    'default': dj_database_url.parse('sqlite:///db.sqlite3'),
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": os.getenv("POSTGRES_DB"),
+        "USER": db_connection_config.get('username'),
+        "PASSWORD": db_connection_config.get('password'),
+        "HOST": db_connection_config.get('host'),
+        # Persistent connections avoid the overhead of re-establishing a connection
+        # to the database in each request
+        "CONN_MAX_AGE": int(os.getenv("POSTGRES_CONN_MAX_AGE", '60')),
+        "PORT": db_connection_config.get('port'),
+    }
 }
 
 

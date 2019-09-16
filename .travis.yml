@@ -1,8 +1,7 @@
 language: python
 python:
   - "3.6"
-install:
-  - pip install pipenv
-  - pipenv install --dev
+services:
+  - docker
 script:
-  - pipenv run pytest
+  - BACKEND_IMAGE=backend docker-compose -f docker-compose-ci.yml run backend /app/scripts/dev/run_tests.sh
