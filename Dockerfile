@@ -7,7 +7,8 @@ RUN apk update \
     # psycopg2 dependencies
     && apk add --virtual build-deps gcc python3-dev musl-dev \
     && apk add postgresql-dev \
-    && apk add build-base linux-headers pcre-dev
+    && apk add build-base linux-headers pcre-dev \
+    && apk add gettext
 
 RUN pip install awscli
 
