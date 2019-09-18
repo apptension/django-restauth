@@ -18,9 +18,9 @@ db_connection_config = json.loads(db_secret_value.get('SecretString'))
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
 
-SECRET_KEY = os.environ.get('SECRET_KEY')
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
 DEBUG = os.environ.get('DEBUG')
-ALLOWED_HOSTS = list(filter(lambda s: len(s) > 0, map(str.strip, os.environ.get('ALLOWED_HOSTS', '').split(','))))
+ALLOWED_HOSTS = list(filter(lambda s: len(s) > 0, map(str.strip, os.environ.get('ALLOWED_HOSTS', '*').split(','))))
 
 
 # Application definition

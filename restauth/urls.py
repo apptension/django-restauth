@@ -25,5 +25,8 @@ urlpatterns = [
     url(r'^doc/', get_swagger_view(title='Documentation')),
 
     path('auth/', include(user_patterns)),
-    path('password-reset/', include(password_reset_patterns))
+    path('password-reset/', include(password_reset_patterns)),
+
+    path('', views.HomeView.as_view(), name='home'),
+    path('status/elb', views.HealthCheckView.as_view(), name='elb_status'),
 ]

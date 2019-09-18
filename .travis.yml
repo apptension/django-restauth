@@ -4,4 +4,5 @@ python:
 services:
   - docker
 script:
+  - docker build -t backend .
   - BACKEND_IMAGE=backend docker-compose -f docker-compose-ci.yml run backend /app/scripts/dev/run_tests.sh
