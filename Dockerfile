@@ -7,14 +7,17 @@ RUN apk update \
     # psycopg2 dependencies
     && apk add --virtual build-deps gcc python3-dev musl-dev \
     && apk add postgresql-dev \
-    && apk add build-base linux-headers pcre-dev
+    && apk add build-base linux-headers pcre-dev \
+    && apk add gettext
+
+RUN pip install awscli
 
 EXPOSE 3031
-WORKDIR /code
-COPY Pipfile Pipfile.lock ./
+WORKDIR /app
+COPY Pipfile Pipfile.lock /app/
 RUN pip install --upgrade pip
 RUN pip install pipenv
 RUN pipenv install --system --dev
-COPY . .
+COPY . /app
 
-CMD ["./run-backend.sh"]
+CMD ["/app/scripts/run-backend.sh"]

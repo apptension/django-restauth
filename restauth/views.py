@@ -1,6 +1,11 @@
 from rest_framework import generics
 from rest_framework import permissions
+from rest_framework import views
+from rest_framework import response
+from rest_framework import status
 from rest_framework.throttling import AnonRateThrottle
+from django.db import DEFAULT_DB_ALIAS, connections
+from django.db.migrations.executor import MigrationExecutor
 
 from . import serializers
 
@@ -52,3 +57,25 @@ class PasswordResetConfirmationView(generics.CreateAPIView):
     """
     permission_classes = (permissions.AllowAny,)
     serializer_class = serializers.PasswordResetConfirmationSerializer
+
+
+class HomeView(views.APIView):
+    permission_classes = []
+
+    def get(self, request):
+        return response.Response(status=status.HTTP_200_OK)
+
+
+class HealthCheckView(views.APIView):
+    authentication_classes = ()
+    permission_classes = (permissions.AllowAny,)
+
+    @staticmethod
+    def get(request):
+        executor = MigrationExecutor(connections[DEFAULT_DB_ALIAS])
+        plan = executor.migration_plan(executor.loader.graph.leaf_nodes())
+
+        if plan:
+            return response.Response(status=status.HTTP_503_SERVICE_UNAVAILABLE)
+
+        return response.Response(status=status.HTTP_200_OK)
