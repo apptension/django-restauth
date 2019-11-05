@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: null
+  labels:
+    app: db
+  name: db
+spec:
+  containers:
+  - image: postgres:9.6
+    name: db
+    ports:
+    - containerPort: 5432
+    resources: {}
+  restartPolicy: OnFailure
+status: {}

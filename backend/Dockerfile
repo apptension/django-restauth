@@ -15,6 +15,6 @@ COPY Pipfile Pipfile.lock ./
 RUN pip install --upgrade pip
 RUN pip install pipenv
 RUN pipenv install --system --dev
-COPY . .
+COPY locale .
 
 CMD ["./run-backend.sh"]
