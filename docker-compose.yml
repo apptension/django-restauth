@@ -19,7 +19,7 @@ services:
     depends_on:
       - "db"
     restart: on-failure
-    env_file: .env
+    env_file: .env.example
 
 volumes:
   restauth_backend:

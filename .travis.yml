@@ -1,8 +1,33 @@
-language: python
-python:
-  - "3.6"
-install:
-  - pip install pipenv
-  - pipenv install --dev
+
+services:
+  - docker
+
+env:
+  - secure: "ir3jXjYj2rstjhCTu6dbSZJb6JWiwE+VhoAY1z5KumilS8OU1rSytNyoxNMElcatzzfGYvwwCuh4M8iY5NbtDvWnHGvUXxcuZAKDSZ96bM9QNXlOzTNuRjwl9aQN2majkZCY2irRDmuAVoxodkNxavtw71D9jru5bv0J2kZdvobIjrTLHCj1kpbbxGgzWQz+2pRoX1sL3k7X17sKsf6i+7fG04OgaL1xKgLt2caaD7keAnt7vU8kk3gM2RtFwZHM8+qbnNVDT/lwKSHmjX+8J531F4rqAnPquGqUrOGmfhd6Nu5FG3n3x5/8axBfi+l04/c8lWO4MUCGSxZW6Rwx30HxXKgwff2yHgAo9yYWnOuri5rbDDiemhF7zRXeAl650usI4headAQK7S1q323/3AX+7vueL9L66Wg8u64ywY5EvqwoSBT7AgzvItqXI+PrSMGTimx9k0rMrLDOV0hMERzKaTO9qJb2Em5LNWBWAE76InGSD9F63PxL1NseDSjLHvYHM/dDflaTJBCWY5KMhO9jtqlT9jzu6gUDIzPQvXuusNo8a0V7giQ3vrB4vCLUSN9FUPN/kB5D/xzgAnKgm1gWXqdUoHF17XQxBqfdh0StefNP/5c/7UEFgQ8qgFUgclv4oWB3QN0Qv9V75JYJdcALdVHbz/1w5RgyxttXYVg="
+
+before_install:
+  - curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+  - sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+  - sudo apt-get update
+  - sudo apt-get -y install docker-ce
+  - docker --version
+  - sudo rm /usr/local/bin/docker-compose
+  - curl -L https://github.com/docker/compose/releases/download/1.20.1/docker-compose-`uname -s`-`uname -m` > docker-compose
+  - chmod +x docker-compose
+  - sudo mv docker-compose /usr/local/bin
+  - docker-compose --version
+
+#install:
+#  - docker-compose up
+
 script:
-  - pipenv run pytest
+#  - docker-compose exec backend pytest
+  - docker build -t backend ./backend
+  - docker images
+  - docker login -u "sztymajakub" -p "$HUB_PASSWORD" https://index.docker.io/v1/
+
+deploy:
+  provider: script
+  script: bash docker_push.sh
+  on:
+    branch: master

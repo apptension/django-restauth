@@ -109,7 +109,7 @@ STATIC_URL = '/static/'
 AUTH_USER_MODEL = 'restauth.User'
 
 LOCALE_PATHS = [
-    os.path.join(BASE_DIR, 'locale')
+    os.path.join(BASE_DIR, '../../locale')
 ]
 
 REST_FRAMEWORK = {
