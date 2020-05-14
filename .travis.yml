@@ -5,4 +5,5 @@ install:
   - pip install pipenv
   - pipenv install --dev
 script:
+  - cp .env.example .env
   - pipenv run pytest
