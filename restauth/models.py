@@ -8,21 +8,16 @@ from rest_framework_jwt.settings import api_settings
 class UserManager(BaseUserManager):
     def create_user(self, email, password=None):
         if not email:
-            raise ValueError('Users must have an email address')
+            raise ValueError("Users must have an email address")
 
-        user = self.model(
-            email=self.normalize_email(email),
-        )
+        user = self.model(email=self.normalize_email(email),)
 
         user.set_password(password)
         user.save(using=self._db)
         return user
 
     def create_superuser(self, email, password):
-        user = self.create_user(
-            email,
-            password=password,
-        )
+        user = self.create_user(email, password=password,)
         user.is_superuser = True
         user.save(using=self._db)
         return user
@@ -32,9 +27,7 @@ class User(AbstractBaseUser):
     id = hashid_field.HashidAutoField(primary_key=True)
     created = models.DateTimeField(editable=False, auto_now_add=True)
     email = models.EmailField(
-        verbose_name='email address',
-        max_length=255,
-        unique=True,
+        verbose_name="email address", max_length=255, unique=True,
     )
     is_confirmed = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
@@ -42,7 +35,7 @@ class User(AbstractBaseUser):
 
     objects = UserManager()
 
-    USERNAME_FIELD = 'email'
+    USERNAME_FIELD = "email"
 
     @property
     def is_staff(self):
@@ -64,5 +57,5 @@ class User(AbstractBaseUser):
 
 
 class UserProfile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="profile")
     first_name = models.CharField(max_length=255, null=True, blank=True)

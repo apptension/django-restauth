@@ -8,12 +8,14 @@ from . import models
 
 
 class UserCreationForm(forms.ModelForm):
-    password1 = forms.CharField(label='Password', widget=forms.PasswordInput)
-    password2 = forms.CharField(label='Password confirmation', widget=forms.PasswordInput)
+    password1 = forms.CharField(label="Password", widget=forms.PasswordInput)
+    password2 = forms.CharField(
+        label="Password confirmation", widget=forms.PasswordInput
+    )
 
     class Meta:
         model = models.User
-        fields = ('email',)
+        fields = ("email",)
 
     def clean_password2(self):
         password1 = self.cleaned_data.get("password1")
@@ -35,7 +37,7 @@ class UserChangeForm(forms.ModelForm):
 
     class Meta:
         model = models.User
-        fields = ('email', 'password', 'is_active', 'is_superuser')
+        fields = ("email", "password", "is_active", "is_superuser")
 
     def clean_password(self):
         return self.initial["password"]
@@ -45,20 +47,17 @@ class UserAdmin(BaseUserAdmin):
     form = UserChangeForm
     add_form = UserCreationForm
 
-    list_display = ('__str__', 'created', 'last_login')
-    list_filter = ('is_superuser',)
+    list_display = ("__str__", "created", "last_login")
+    list_filter = ("is_superuser",)
     fieldsets = (
-        (None, {'fields': ('email', 'password', 'is_active')}),
-        ('Permissions', {'fields': ('is_superuser',)}),
+        (None, {"fields": ("email", "password", "is_active")}),
+        ("Permissions", {"fields": ("is_superuser",)}),
     )
     add_fieldsets = (
-        (None, {
-            'classes': ('wide',),
-            'fields': ('email', 'password1', 'password2')}
-         ),
+        (None, {"classes": ("wide",), "fields": ("email", "password1", "password2")}),
     )
-    search_fields = ('email',)
-    ordering = ('created',)
+    search_fields = ("email",)
+    ordering = ("created",)
     filter_horizontal = ()
 
 

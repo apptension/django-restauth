@@ -50,7 +50,7 @@ class TestResetPassword:
             },
         )
         assert response.status_code == status.HTTP_201_CREATED, response.data
-        assert 'jwt_token' in response.data
+        assert "jwt_token" in response.data
 
         u = dj_auth.get_user_model().objects.get(pk=user.pk)
         assert response.data["jwt_token"] == u.jwt_token, response.data
