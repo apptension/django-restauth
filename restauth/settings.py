@@ -117,7 +117,7 @@ STATIC_URL = "/static/"
 
 AUTH_USER_MODEL = "restauth.User"
 
-LOCALE_PATHS = [os.path.join(BASE_DIR, "locale")]
+LOCALE_PATHS = []
 
 REST_FRAMEWORK = {
     "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAuthenticated",),
