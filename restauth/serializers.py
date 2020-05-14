@@ -14,25 +14,23 @@ from . import utils
 class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.UserProfile
-        fields = ('first_name',)
+        fields = ("first_name",)
 
 
 class UserSignupSerializer(serializers.ModelSerializer):
-    id = rest.HashidSerializerCharField(source_field='restauth.User.id', read_only=True)
+    id = rest.HashidSerializerCharField(source_field="restauth.User.id", read_only=True)
     email = serializers.EmailField(
-        validators=[validators.UniqueValidator(queryset=dj_auth.get_user_model().objects.all())],
+        validators=[
+            validators.UniqueValidator(queryset=dj_auth.get_user_model().objects.all())
+        ],
     )
     profile = UserProfileSerializer(required=False)
 
     class Meta:
         model = dj_auth.get_user_model()
-        fields = ('id', 'email', 'password', 'jwt_token', 'profile')
-        read_only_fields = ('jwt_token',)
-        extra_kwargs = {
-            'password': {
-                'write_only': True,
-            }
-        }
+        fields = ("id", "email", "password", "jwt_token", "profile")
+        read_only_fields = ("jwt_token",)
+        extra_kwargs = {"password": {"write_only": True,}}
 
     def validate_password(self, password):
         password_validation.validate_password(password)
@@ -40,19 +38,15 @@ class UserSignupSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         user = dj_auth.get_user_model().objects.create_user(
-            validated_data['email'],
-            validated_data['password'],
+            validated_data["email"], validated_data["password"],
         )
         models.UserProfile.objects.create(
-            user=user,
-            **validated_data.pop('profile', {}),
+            user=user, **validated_data.pop("profile", {}),
         )
 
         activation_token = tokens.account_activation_token.make_token(user)
         utils.user_notification_impl(
-            'account_activation',
-            user=user,
-            token=activation_token,
+            "account_activation", user=user, token=activation_token,
         )
 
         return user
@@ -67,11 +61,13 @@ class UserAccountConfirmationSerializer(serializers.Serializer):
     token = serializers.CharField(write_only=True)
 
     def validate(self, attrs):
-        token = attrs['token']
-        user = attrs['user']
+        token = attrs["token"]
+        user = attrs["user"]
 
         if not tokens.account_activation_token.check_token(user, token):
-            raise exceptions.ValidationError(_('Malformed user account confirmation token'))
+            raise exceptions.ValidationError(
+                _("Malformed user account confirmation token")
+            )
 
         return attrs
 
@@ -79,7 +75,7 @@ class UserAccountConfirmationSerializer(serializers.Serializer):
         pass
 
     def create(self, validated_data):
-        user = validated_data.pop('user')
+        user = validated_data.pop("user")
         user.is_confirmed = True
         user.save()
         return user
@@ -87,8 +83,8 @@ class UserAccountConfirmationSerializer(serializers.Serializer):
 
 class UserAccountChangePasswordSerializer(serializers.Serializer):
     user = serializers.HiddenField(default=serializers.CurrentUserDefault())
-    old_password = serializers.CharField(write_only=True, help_text=_('Old password'))
-    new_password = serializers.CharField(write_only=True, help_text=_('New password'))
+    old_password = serializers.CharField(write_only=True, help_text=_("Old password"))
+    new_password = serializers.CharField(write_only=True, help_text=_("New password"))
 
     jwt_token = serializers.CharField(read_only=True)
 
@@ -97,11 +93,11 @@ class UserAccountChangePasswordSerializer(serializers.Serializer):
         return new_password
 
     def validate(self, attrs):
-        old_password = attrs['old_password']
+        old_password = attrs["old_password"]
 
-        user = attrs['user']
+        user = attrs["user"]
         if not user.check_password(old_password):
-            raise exceptions.ValidationError({'old_password': _('Wrong old password')})
+            raise exceptions.ValidationError({"old_password": _("Wrong old password")})
 
         return attrs
 
@@ -109,8 +105,8 @@ class UserAccountChangePasswordSerializer(serializers.Serializer):
         pass
 
     def create(self, validated_data):
-        user = validated_data.pop('user')
-        new_password = validated_data.pop('new_password')
+        user = validated_data.pop("user")
+        new_password = validated_data.pop("new_password")
         user.set_password(new_password)
         user.save()
 
@@ -118,17 +114,16 @@ class UserAccountChangePasswordSerializer(serializers.Serializer):
 
 
 class PasswordResetSerializer(serializers.Serializer):
-    email = serializers.EmailField(write_only=True, help_text=_('User e-mail'))
+    email = serializers.EmailField(write_only=True, help_text=_("User e-mail"))
 
     def create(self, validated_data):
         try:
-            user = dj_auth.get_user_model().objects.get(email=validated_data['email'])
+            user = dj_auth.get_user_model().objects.get(email=validated_data["email"])
         except dj_auth.get_user_model().DoesNotExist:
-            raise exceptions.NotFound(_('User not found'))
+            raise exceptions.NotFound(_("User not found"))
 
         utils.user_notification_impl(
-            'password_reset',
-            token=tokens.password_reset_token.make_token(user),
+            "password_reset", token=tokens.password_reset_token.make_token(user),
         )
 
         return user
@@ -141,23 +136,23 @@ class PasswordResetConfirmationSerializer(serializers.Serializer):
     user = serializers.PrimaryKeyRelatedField(
         queryset=models.User.objects.all(),
         pk_field=rest.HashidSerializerCharField(),
-        write_only=True
+        write_only=True,
     )
 
-    new_password = serializers.CharField(write_only=True, help_text=_('New password'))
-    token = serializers.CharField(write_only=True, help_text=_('Token'))
-    jwt_token = serializers.CharField(read_only=True, help_text=_('JWT token'))
+    new_password = serializers.CharField(write_only=True, help_text=_("New password"))
+    token = serializers.CharField(write_only=True, help_text=_("Token"))
+    jwt_token = serializers.CharField(read_only=True, help_text=_("JWT token"))
 
     def validate_new_password(self, new_password):
         password_validation.validate_password(new_password)
         return new_password
 
     def validate(self, attrs):
-        token = attrs['token']
-        user = attrs['user']
+        token = attrs["token"]
+        user = attrs["user"]
 
         if not tokens.password_reset_token.check_token(user, token):
-            raise exceptions.ValidationError(_('Malformed password reset token'))
+            raise exceptions.ValidationError(_("Malformed password reset token"))
 
         return attrs
 
@@ -165,8 +160,8 @@ class PasswordResetConfirmationSerializer(serializers.Serializer):
         pass
 
     def create(self, validated_data):
-        user = validated_data.pop('user')
-        new_password = validated_data.pop('new_password')
+        user = validated_data.pop("user")
+        new_password = validated_data.pop("new_password")
         user.set_password(new_password)
         user.save()
 

@@ -4,17 +4,19 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-Django = "~=2.2"
-djangorestframework = "~=3.10"
-djangorestframework-jwt = "~=1.11"
-django-hashid-field = "~=2.1"
+Django = "~=3.0"
+djangorestframework = "~=3.11"
+django-hashid-field = "~=3.1"
 dj-database-url = "*"
+six = "*"
+drf-jwt = "~=1.16"
+pytest-faker = "*"
 
 [dev-packages]
-factory_boy = "==2.10.0"
-pytest = "==3.4.1"
-pytest-factoryboy = "==2.0.1"
-pytest-django = "==3.1.2"
+factory_boy = "==2.12.0"
+pytest = "==5.4.1"
+pytest-factoryboy = "~=2.0"
+pytest-django = "~=3.9"
 django-rest-swagger = "*"
 
 [requires]
