@@ -1,21 +1,25 @@
 import os
-import dj_database_url
+
+import environ
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+env = environ.Env(
+    # set casting, default value
+    DEBUG=(bool, False)
+)
+
+environ.Env.read_env()
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
 
-SECRET_KEY = os.environ.get("SECRET_KEY")
-DEBUG = os.environ.get("DEBUG")
-ALLOWED_HOSTS = list(
-    filter(
-        lambda s: len(s) > 0,
-        map(str.strip, os.environ.get("ALLOWED_HOSTS", "").split(",")),
-    )
-)
+SECRET_KEY = env("SECRET_KEY")
+
+DEBUG = env("DEBUG")
+ALLOWED_HOSTS = env.list("ALLOWED_HOSTS")
 
 
 # Application definition
@@ -68,7 +72,7 @@ WSGI_APPLICATION = "restauth.wsgi.application"
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
 
 DATABASES = {
-    "default": dj_database_url.parse("sqlite:///db.sqlite3"),
+    "default": env.db(default="sqlite:///db.sqlite3"),
 }
 
 
@@ -126,6 +130,6 @@ JWT_AUTH = {
     "JWT_ENCODE_HANDLER": "restauth.jwt.encode_handler",
 }
 
-HASHID_FIELD_SALT = "9q#3t$5gs9ob682b@(6^fdv2kg*0ztr(3doa((w&kyq!d8rbt^"
+HASHID_FIELD_SALT = env("HASHID_FIELD_SALT")
 
 USER_NOTIFICATION_IMPL = "restauth.notifications.stdout"

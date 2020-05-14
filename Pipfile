@@ -7,10 +7,10 @@ name = "pypi"
 Django = "~=3.0"
 djangorestframework = "~=3.11"
 django-hashid-field = "~=3.1"
-dj-database-url = "*"
 six = "*"
 drf-jwt = "~=1.16"
 pytest-faker = "*"
+django-environ = "*"
 
 [dev-packages]
 factory_boy = "==2.12.0"
