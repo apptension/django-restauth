@@ -29,7 +29,8 @@ class UserAccountChangePasswordView(generics.CreateAPIView):
     Request to change the password of the user, it requires to provide *old_password* and *new_password*
     parameters.
     """
-    permission_classes = (permissions.IsAuthenticated, )
+
+    permission_classes = (permissions.IsAuthenticated,)
     serializer_class = serializers.UserAccountChangePasswordSerializer
 
 
@@ -39,7 +40,8 @@ class PasswordResetView(generics.CreateAPIView):
     post:
     Request to reset the user password. It will generate a token for the confirmation e-mail.
     """
-    throttle_classes = (AnonRateThrottle, )
+
+    throttle_classes = (AnonRateThrottle,)
     permission_classes = (permissions.AllowAny,)
     serializer_class = serializers.PasswordResetSerializer
 
@@ -50,5 +52,6 @@ class PasswordResetConfirmationView(generics.CreateAPIView):
     post:
     Set new password, it requires to provide the new password to set.
     """
+
     permission_classes = (permissions.AllowAny,)
     serializer_class = serializers.PasswordResetConfirmationSerializer
