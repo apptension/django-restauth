@@ -20,6 +20,7 @@ SECRET_KEY = env("SECRET_KEY")
 
 DEBUG = env("DEBUG")
 ALLOWED_HOSTS = env.list("ALLOWED_HOSTS", default=[])
+ALLOWED_CIDR_NETS = env.list("DJANGO_ALLOWED_CIDR_NETS", default=[])
 
 
 # Application definition
@@ -45,6 +46,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "allow_cidr.middleware.AllowCIDRMiddleware",
 ]
 
 ROOT_URLCONF = "restauth.urls"
