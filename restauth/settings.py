@@ -10,7 +10,7 @@ env = environ.Env(
     DEBUG=(bool, False)
 )
 
-environ.Env.read_env()
+environ.Env.read_env(os.path.join(BASE_DIR, ".env"))
 
 
 # Quick-start development settings - unsuitable for production
@@ -32,13 +32,15 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "restauth",
     "rest_framework",
     "rest_framework_swagger",
-    "restauth",
+    "django_hosts",
     "rest_framework_jwt.blacklist",
 ]
 
 MIDDLEWARE = [
+    "django_hosts.middleware.HostsRequestMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -47,9 +49,12 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "allow_cidr.middleware.AllowCIDRMiddleware",
+    "django_hosts.middleware.HostsResponseMiddleware",
 ]
 
-ROOT_URLCONF = "restauth.urls"
+ROOT_URLCONF = "restauth.urls_api"
+ROOT_HOSTCONF = "restauth.hosts"
+DEFAULT_HOST = "api"
 
 TEMPLATES = [
     {
@@ -94,7 +99,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/1.11/topics/i18n/
 
-LANGUAGE_CODE = "error_codes"
+LANGUAGE_CODE = "en"
 
 TIME_ZONE = "UTC"
 

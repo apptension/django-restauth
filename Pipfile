@@ -12,6 +12,7 @@ drf-jwt = "~=1.16"
 pytest-faker = "*"
 django-environ = "*"
 django-allow-cidr = "*"
+django-hosts = "*"
 
 [dev-packages]
 factory_boy = "==2.12.0"

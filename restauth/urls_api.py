@@ -1,7 +1,6 @@
 from django.conf.urls import url
-from django.contrib import admin
-from django.urls import path
 from django.urls import include
+from django.urls import path
 from rest_framework_jwt.views import obtain_jwt_token
 from rest_framework_swagger.views import get_swagger_view
 
@@ -29,7 +28,6 @@ password_reset_patterns = [
 ]
 
 urlpatterns = [
-    url(r"^admin/", admin.site.urls),
     url(r"^doc/", get_swagger_view(title="Documentation")),
     path("auth/", include(user_patterns)),
     path("password-reset/", include(password_reset_patterns)),
