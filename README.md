@@ -15,15 +15,9 @@ pipenv run python manage.py runserver
 * Modify your settings
 
 ```python
-LANGUAGE_CODE = 'error_codes'
-
 # ..
 
 AUTH_USER_MODEL = 'restauth.User'
-
-LOCALE_PATHS = [
-    os.path.join(BASE_DIR, 'locale')
-]
 
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': (
@@ -59,5 +53,5 @@ HASHID_FIELD_SALT = ''
 - [x] Password reset & change endpoints
 - [x] Add Swagger for API documentation
 - [x] Ability to set user notification implementation
-- [ ] Add lean docker-compose w/ Postgres
-- [ ] Add a way to communicate settings, urls, etc to a higher order project
+- [x] Health check endpoint with DB migrations validation
+- [x] Two separate hosts, api & admin using django-hosts
