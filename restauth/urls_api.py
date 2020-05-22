@@ -28,6 +28,7 @@ password_reset_patterns = [
 ]
 
 urlpatterns = [
+    path("lbcheck", views.HealthCheckView.as_view(), name="health-check"),
     url(r"^doc/", get_swagger_view(title="Documentation")),
     path("auth/", include(user_patterns)),
     path("password-reset/", include(password_reset_patterns)),
