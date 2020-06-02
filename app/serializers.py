@@ -18,7 +18,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
 
 
 class UserSignupSerializer(serializers.ModelSerializer):
-    id = rest.HashidSerializerCharField(source_field="restauth.User.id", read_only=True)
+    id = rest.HashidSerializerCharField(source_field="app.User.id", read_only=True)
     email = serializers.EmailField(
         validators=[
             validators.UniqueValidator(queryset=dj_auth.get_user_model().objects.all())

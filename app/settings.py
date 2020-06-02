@@ -1,13 +1,15 @@
+import json
 import os
 
 import environ
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+BASE_DIR = environ.Path(__file__) - 2
+
 
 env = environ.Env(
     # set casting, default value
-    DEBUG=(bool, False)
+    DJANGO_DEBUG=(bool, False)
 )
 
 environ.Env.read_env(os.path.join(BASE_DIR, ".env"))
@@ -16,10 +18,10 @@ environ.Env.read_env(os.path.join(BASE_DIR, ".env"))
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
 
-SECRET_KEY = env("SECRET_KEY")
+SECRET_KEY = env("DJANGO_SECRET_KEY", default="=+9on!eny7gevu*q9b#1e*0tsno4@s6d&i#tdueunh)wczt$$^")
 
-DEBUG = env("DEBUG")
-ALLOWED_HOSTS = env.list("ALLOWED_HOSTS", default=[])
+DEBUG = env("DJANGO_DEBUG")
+ALLOWED_HOSTS = env.list("DJANGO_ALLOWED_HOSTS", default=[])
 ALLOWED_CIDR_NETS = env.list("DJANGO_ALLOWED_CIDR_NETS", default=[])
 
 
@@ -32,11 +34,11 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "restauth",
     "rest_framework",
     "rest_framework_swagger",
     "django_hosts",
     "rest_framework_jwt.blacklist",
+    "app"
 ]
 
 MIDDLEWARE = [
@@ -52,8 +54,8 @@ MIDDLEWARE = [
     "django_hosts.middleware.HostsResponseMiddleware",
 ]
 
-ROOT_URLCONF = "restauth.urls_api"
-ROOT_HOSTCONF = "restauth.hosts"
+ROOT_URLCONF = "app.urls_api"
+ROOT_HOSTCONF = "app.hosts"
 DEFAULT_HOST = "api"
 
 TEMPLATES = [
@@ -72,14 +74,23 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = "restauth.wsgi.application"
+WSGI_APPLICATION = "app.wsgi.application"
 
 
 # Database
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
 
+DB_CONNECTION = json.loads(env("DB_CONNECTION"))
+
 DATABASES = {
-    "default": env.db(default="sqlite:///db.sqlite3"),
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": DB_CONNECTION.get("dbname"),
+        "USER": DB_CONNECTION.get("username"),
+        "PASSWORD": DB_CONNECTION.get("password"),
+        "HOST": DB_CONNECTION.get("host"),
+        "PORT": DB_CONNECTION.get("port"),
+    }
 }
 
 
@@ -90,9 +101,9 @@ AUTH_PASSWORD_VALIDATORS = [
     {
         "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
     },
-    {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",},
-    {"NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",},
-    {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",},
+    {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator", },
+    {"NAME": "django.contrib.auth.password_validation.CommonPasswordValidator", },
+    {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator", },
 ]
 
 
@@ -113,18 +124,26 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
-STATIC_URL = "/static/"
+STATIC_ROOT = str(BASE_DIR("static"))
+STATIC_URL = '/static/'
 
-AUTH_USER_MODEL = "restauth.User"
+AUTH_USER_MODEL = "app.User"
 
 LOCALE_PATHS = []
 
 REST_FRAMEWORK = {
-    "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAuthenticated",),
-    "DEFAULT_AUTHENTICATION_CLASSES": (
-        "rest_framework_jwt.authentication.JSONWebTokenAuthentication",
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
     ),
-    "DEFAULT_THROTTLE_RATES": {"anon": "100/day"},
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
+    ),
+}
+
+JWT_AUTH = {
+    'JWT_ENCODE_HANDLER': 'app.jwt.encode_handler',
 }
 
 SWAGGER_SETTINGS = {
@@ -133,10 +152,6 @@ SWAGGER_SETTINGS = {
     },
 }
 
-JWT_AUTH = {
-    "JWT_ENCODE_HANDLER": "restauth.jwt.encode_handler",
-}
-
 HASHID_FIELD_SALT = env("HASHID_FIELD_SALT")
 
-USER_NOTIFICATION_IMPL = "restauth.notifications.stdout"
+USER_NOTIFICATION_IMPL = "app.notifications.stdout"
