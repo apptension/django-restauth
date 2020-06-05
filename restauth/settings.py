@@ -38,7 +38,7 @@ INSTALLED_APPS = [
     "rest_framework_swagger",
     "django_hosts",
     "rest_framework_jwt.blacklist",
-    "app"
+    "restauth"
 ]
 
 MIDDLEWARE = [
@@ -54,8 +54,8 @@ MIDDLEWARE = [
     "django_hosts.middleware.HostsResponseMiddleware",
 ]
 
-ROOT_URLCONF = "app.urls_api"
-ROOT_HOSTCONF = "app.hosts"
+ROOT_URLCONF = "restauth.urls_api"
+ROOT_HOSTCONF = "restauth.hosts"
 DEFAULT_HOST = "api"
 
 TEMPLATES = [
@@ -74,7 +74,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = "app.wsgi.application"
+WSGI_APPLICATION = "restauth.wsgi.application"
 
 
 # Database
@@ -127,23 +127,20 @@ USE_TZ = True
 STATIC_ROOT = str(BASE_DIR("static"))
 STATIC_URL = '/static/'
 
-AUTH_USER_MODEL = "app.User"
+AUTH_USER_MODEL = "restauth.User"
 
 LOCALE_PATHS = []
 
 REST_FRAMEWORK = {
-    'DEFAULT_PERMISSION_CLASSES': (
-        'rest_framework.permissions.IsAuthenticated',
+    "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAuthenticated",),
+    "DEFAULT_AUTHENTICATION_CLASSES": (
+        "rest_framework_jwt.authentication.JSONWebTokenAuthentication",
     ),
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
-        'rest_framework.authentication.SessionAuthentication',
-        'rest_framework.authentication.BasicAuthentication',
-    ),
+    "DEFAULT_THROTTLE_RATES": {"anon": "100/day"},
 }
 
 JWT_AUTH = {
-    'JWT_ENCODE_HANDLER': 'app.jwt.encode_handler',
+    'JWT_ENCODE_HANDLER': 'restauth.jwt.encode_handler',
 }
 
 SWAGGER_SETTINGS = {
@@ -154,4 +151,4 @@ SWAGGER_SETTINGS = {
 
 HASHID_FIELD_SALT = env("HASHID_FIELD_SALT")
 
-USER_NOTIFICATION_IMPL = "app.notifications.stdout"
+USER_NOTIFICATION_IMPL = "restauth.notifications.stdout"

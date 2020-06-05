@@ -1,0 +1,49 @@
+version: '3.4'
+
+services:
+  db:
+    image: postgres:10.6
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=backend
+      - POSTGRES_PASSWORD=backend
+      - POSTGRES_DB=backend
+    volumes:
+      - restauth_backend:/var/lib/postgresql/data
+
+  backend:
+    build:
+      context: .
+      target: backend
+    image: restauth_backend
+    command: ["./scripts/run_local.sh"]
+    volumes:
+      - .:/code
+    ports:
+      - "5000:5000"
+    depends_on:
+      - "db"
+    restart: on-failure
+    env_file: .env
+
+  backend-nginx:
+    build:
+      context: .
+      target: nginx
+    command: ["./scripts/run_nginx.sh"]
+    depends_on:
+      - backend
+    links:
+      - backend
+    ports:
+      - "80:80"
+    restart: unless-stopped
+    environment:
+      - NGINX_SERVER_NAME=localhost
+      - NGINX_BACKEND_HOST=backend
+    env_file:
+      - .env
+volumes:
+  restauth_backend:
+    external: true
