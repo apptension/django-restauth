@@ -38,12 +38,15 @@ INSTALLED_APPS = [
     "rest_framework_swagger",
     "django_hosts",
     "rest_framework_jwt.blacklist",
+    "whitenoise",
     "restauth"
 ]
 
+
 MIDDLEWARE = [
-    "django_hosts.middleware.HostsRequestMiddleware",
     "django.middleware.security.SecurityMiddleware",
+    'whitenoise.middleware.WhiteNoiseMiddleware',
+    "django_hosts.middleware.HostsRequestMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -53,7 +56,6 @@ MIDDLEWARE = [
     "allow_cidr.middleware.AllowCIDRMiddleware",
     "django_hosts.middleware.HostsResponseMiddleware",
 ]
-
 ROOT_URLCONF = "restauth.urls_api"
 ROOT_HOSTCONF = "restauth.hosts"
 DEFAULT_HOST = "api"
@@ -124,7 +126,9 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
-STATIC_ROOT = str(BASE_DIR("static"))
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATIC_URL = '/static/'
 
 AUTH_USER_MODEL = "restauth.User"

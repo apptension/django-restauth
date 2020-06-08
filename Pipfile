@@ -15,6 +15,7 @@ django-hosts = "*"
 psycopg2-binary = "*"
 requests = "*"
 six = "*"
+whitenoise = "*"
 
 
 [dev-packages]

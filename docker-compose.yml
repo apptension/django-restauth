@@ -19,7 +19,7 @@ services:
     image: restauth_backend
     command: ["./scripts/run_local.sh"]
     volumes:
-      - .:/code
+      - .:/app
     ports:
       - "5000:5000"
     depends_on:
@@ -27,23 +27,6 @@ services:
     restart: on-failure
     env_file: .env
 
-  backend-nginx:
-    build:
-      context: .
-      target: nginx
-    command: ["./scripts/run_nginx.sh"]
-    depends_on:
-      - backend
-    links:
-      - backend
-    ports:
-      - "80:80"
-    restart: unless-stopped
-    environment:
-      - NGINX_SERVER_NAME=localhost
-      - NGINX_BACKEND_HOST=backend
-    env_file:
-      - .env
 volumes:
   restauth_backend:
     external: true
