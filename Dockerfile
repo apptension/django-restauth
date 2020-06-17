@@ -37,4 +37,4 @@ ENV DB_CONNECTION='{}' \
 
 RUN python manage.py collectstatic --no-input
 
-CMD /bin/chamber exec $CHAMBER_SERVICE_NAME -- sh /app/scripts/run.sh
+CMD ["./scripts/run.sh"]

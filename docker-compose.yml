@@ -17,7 +17,7 @@ services:
       context: .
       target: backend
     image: restauth_backend
-    command: ["./scripts/run_local.sh"]
+#    command: ["./scripts/run_local.sh"]
     volumes:
       - .:/app
     ports:
