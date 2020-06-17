@@ -18,7 +18,7 @@ environ.Env.read_env(os.path.join(BASE_DIR, ".env"))
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
 
-SECRET_KEY = env("DJANGO_SECRET_KEY", default="=+9on!eny7gevu*q9b#1e*0tsno4@s6d&i#tdueunh)wczt$$^")
+SECRET_KEY = env("DJANGO_SECRET_KEY")
 
 DEBUG = env("DJANGO_DEBUG")
 ALLOWED_HOSTS = env.list("DJANGO_ALLOWED_HOSTS", default=[])
@@ -44,9 +44,9 @@ INSTALLED_APPS = [
 
 
 MIDDLEWARE = [
+    "django_hosts.middleware.HostsRequestMiddleware",
     "django.middleware.security.SecurityMiddleware",
     'whitenoise.middleware.WhiteNoiseMiddleware',
-    "django_hosts.middleware.HostsRequestMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -87,11 +87,11 @@ DB_CONNECTION = json.loads(env("DB_CONNECTION"))
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": DB_CONNECTION.get("dbname"),
-        "USER": DB_CONNECTION.get("username"),
-        "PASSWORD": DB_CONNECTION.get("password"),
-        "HOST": DB_CONNECTION.get("host"),
-        "PORT": DB_CONNECTION.get("port"),
+        "NAME": DB_CONNECTION["dbname"],
+        "USER": DB_CONNECTION["username"],
+        "PASSWORD": DB_CONNECTION["password"],
+        "HOST": DB_CONNECTION["host"],
+        "PORT": DB_CONNECTION["port"],
     }
 }
 
@@ -128,7 +128,7 @@ USE_TZ = True
 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATIC_URL = '/static/'
 
 AUTH_USER_MODEL = "restauth.User"
