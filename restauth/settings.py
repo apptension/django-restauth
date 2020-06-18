@@ -1,13 +1,15 @@
+import json
 import os
 
 import environ
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+BASE_DIR = environ.Path(__file__) - 2
+
 
 env = environ.Env(
     # set casting, default value
-    DEBUG=(bool, False)
+    DJANGO_DEBUG=(bool, False)
 )
 
 environ.Env.read_env(os.path.join(BASE_DIR, ".env"))
@@ -16,10 +18,10 @@ environ.Env.read_env(os.path.join(BASE_DIR, ".env"))
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
 
-SECRET_KEY = env("SECRET_KEY")
+SECRET_KEY = env("DJANGO_SECRET_KEY")
 
-DEBUG = env("DEBUG")
-ALLOWED_HOSTS = env.list("ALLOWED_HOSTS", default=[])
+DEBUG = env("DJANGO_DEBUG")
+ALLOWED_HOSTS = env.list("DJANGO_ALLOWED_HOSTS", default=[])
 ALLOWED_CIDR_NETS = env.list("DJANGO_ALLOWED_CIDR_NETS", default=[])
 
 
@@ -32,16 +34,19 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "restauth",
     "rest_framework",
     "rest_framework_swagger",
     "django_hosts",
     "rest_framework_jwt.blacklist",
+    "whitenoise",
+    "restauth"
 ]
+
 
 MIDDLEWARE = [
     "django_hosts.middleware.HostsRequestMiddleware",
     "django.middleware.security.SecurityMiddleware",
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -51,7 +56,6 @@ MIDDLEWARE = [
     "allow_cidr.middleware.AllowCIDRMiddleware",
     "django_hosts.middleware.HostsResponseMiddleware",
 ]
-
 ROOT_URLCONF = "restauth.urls_api"
 ROOT_HOSTCONF = "restauth.hosts"
 DEFAULT_HOST = "api"
@@ -78,8 +82,17 @@ WSGI_APPLICATION = "restauth.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
 
+DB_CONNECTION = json.loads(env("DB_CONNECTION"))
+
 DATABASES = {
-    "default": env.db(default="sqlite:///db.sqlite3"),
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": DB_CONNECTION["dbname"],
+        "USER": DB_CONNECTION["username"],
+        "PASSWORD": DB_CONNECTION["password"],
+        "HOST": DB_CONNECTION["host"],
+        "PORT": DB_CONNECTION["port"],
+    }
 }
 
 
@@ -90,9 +103,9 @@ AUTH_PASSWORD_VALIDATORS = [
     {
         "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
     },
-    {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",},
-    {"NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",},
-    {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",},
+    {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator", },
+    {"NAME": "django.contrib.auth.password_validation.CommonPasswordValidator", },
+    {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator", },
 ]
 
 
@@ -113,7 +126,10 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
-STATIC_URL = "/static/"
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATIC_URL = '/static/'
 
 AUTH_USER_MODEL = "restauth.User"
 
@@ -127,14 +143,14 @@ REST_FRAMEWORK = {
     "DEFAULT_THROTTLE_RATES": {"anon": "100/day"},
 }
 
+JWT_AUTH = {
+    'JWT_ENCODE_HANDLER': 'restauth.jwt.encode_handler',
+}
+
 SWAGGER_SETTINGS = {
     "SECURITY_DEFINITIONS": {
         "api_key": {"type": "apiKey", "in": "header", "name": "Authorization"}
     },
-}
-
-JWT_AUTH = {
-    "JWT_ENCODE_HANDLER": "restauth.jwt.encode_handler",
 }
 
 HASHID_FIELD_SALT = env("HASHID_FIELD_SALT")
