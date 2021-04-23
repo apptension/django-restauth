@@ -6,14 +6,12 @@ import environ
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = environ.Path(__file__) - 2
 
-
 env = environ.Env(
     # set casting, default value
     DJANGO_DEBUG=(bool, False)
 )
 
 environ.Env.read_env(os.path.join(BASE_DIR, ".env"))
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
@@ -23,7 +21,6 @@ SECRET_KEY = env("DJANGO_SECRET_KEY")
 DEBUG = env("DJANGO_DEBUG")
 ALLOWED_HOSTS = env.list("DJANGO_ALLOWED_HOSTS", default=[])
 ALLOWED_CIDR_NETS = env.list("DJANGO_ALLOWED_CIDR_NETS", default=[])
-
 
 # Application definition
 
@@ -35,13 +32,12 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "rest_framework",
-    "rest_framework_swagger",
+    "drf_yasg",
     "django_hosts",
     "rest_framework_jwt.blacklist",
     "whitenoise",
     "restauth"
 ]
-
 
 MIDDLEWARE = [
     "django_hosts.middleware.HostsRequestMiddleware",
@@ -78,7 +74,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "restauth.wsgi.application"
 
-
 # Database
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
 
@@ -86,7 +81,7 @@ DB_CONNECTION = json.loads(env("DB_CONNECTION"))
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.postgresql",
+        "ENGINE": "django.db.backends.sqlite3",  # Add 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
         "NAME": DB_CONNECTION["dbname"],
         "USER": DB_CONNECTION["username"],
         "PASSWORD": DB_CONNECTION["password"],
@@ -94,7 +89,6 @@ DATABASES = {
         "PORT": DB_CONNECTION["port"],
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/1.11/ref/settings/#auth-password-validators
@@ -108,7 +102,6 @@ AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator", },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/1.11/topics/i18n/
 
@@ -121,7 +114,6 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
